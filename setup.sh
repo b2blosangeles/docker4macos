@@ -53,7 +53,7 @@ then
     do
         echo "* * * * *  (sleep $i ; echo _UI_APP && sh $PWD/cronjob.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log)" >> /var/at/tabs/$SUDO_USER
     done
-
+    echo "Success : your ui app is ready!"
 else
     echo "Error : Need sudo run the command!"
 fi
