@@ -14,8 +14,9 @@ $DOCKERCMD container rm local_proxy_container
 
 # --restart=always
 
-$DOCKERCMD  run -d --network=network_ui_app -p 80:80 -v "$WORKFOLDER/_localChannel/proxyserver/sites":/usr/local/apache2/conf/sites/ \
--v "$WORKFOLDER/_localChannel/proxyserver/proxyDefaultDocs":/var/proxyDefaultDocs \
+$DOCKERCMD  run -d --network=network_ui_app -p 80:80  \
+-v "$WORKFOLDER/sites/setting":/var/sitesSetting \
+-v "$WORKFOLDER/_localChannel/proxyserver":/var/proxySetting \
 --name local_proxy_container  local_proxy_image
 
 echo "Finished to boot proxy."

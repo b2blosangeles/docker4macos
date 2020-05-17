@@ -15,6 +15,7 @@ $DOCKERCMD container rm local_admin_container
 # --restart=always
 
 $DOCKERCMD run -d --network=network_ui_app -p 10000:10000 -v "$WORKFOLDER/_localChannel":/var/_localChannel \
+-v "$WORKFOLDER/sites":/var/sites \
 --name local_admin_container  local_admin_image
 
 echo "Finished to boot admin."
