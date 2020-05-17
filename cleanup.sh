@@ -35,6 +35,8 @@ then
     docker stop container $(docker ps  -q -a --filter="name=local_channel_")
     docker rm container $(docker ps  -q -a --filter="name=local_channel_")
 
+    docker system prune --all --force
+
     rm -fr $PWD/_localChannel/admin/DOCKERCMD.json
     
     sed '/echo _UI_APP/d' /var/at/tabs/$SUDO_USER  > /tmp/crontab_$SUDO_USER
