@@ -18,23 +18,19 @@ case "$(uname -s)" in
      ;;
 esac
 
+if [ $DOCKERCMD == '' ]; then
+    echo "Error : Docker installation and running is required!"
+    exit 0
+fi
 
-docker network rm network_ui_app
-
-docker network create \
-    --driver=bridge \
-    --subnet=10.10.10.0/16 \
-    --ip-range=10.10.10.0/24 \
-    --gateway=10.10.10.254 \
-    network_ui_app
-
+if [ $OSENV != "Mac" ]; then
+    echo "Error : We only support Mac OS X now!"
+    exit 0
+fi
 
 if [ $USER != $SUDO_USER ] && [ $USER == "root" ] ;
 then
-    if [ $OSENV != "Mac" ]; then
-        echo "Error : We only support Mac OS X now!"
-        exit 0
-    fi
+
     echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$PWD\"", "\"OSENV\"": "\"$OSENV\""} > $PWD/_localChannel/admin/DOCKERCMD.json
     
     sed '/echo _UI_APP/d' /var/at/tabs/$SUDO_USER  > /tmp/crontab_$SUDO_USER
