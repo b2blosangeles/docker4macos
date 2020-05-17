@@ -13,8 +13,12 @@ do
      sleep 1
 done
 
+echo "running adminServer.sh and proxyServer.sh"
+
 fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
 fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
 COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DOCKERCMD"
 eval " $COMM"
+
+echo "Done adminServer.sh and proxyServer.sh"
