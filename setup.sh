@@ -19,6 +19,15 @@ case "$(uname -s)" in
 esac
 
 
+docker network rm network_ui_app
+
+docker network create \
+    --driver=bridge \
+    --subnet=10.10.10.0/16 \
+    --ip-range=10.10.10.0/24 \
+    --gateway=10.10.10.254 \
+    network_ui_app
+
 
 if [ $USER != $SUDO_USER ] && [ $USER == "root" ] ;
 then
