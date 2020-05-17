@@ -34,8 +34,7 @@ then
     fnAdmin=$PWD/_localChannel/bootup/adminServer.sh
     fnProxy=$PWD/_localChannel/bootup/proxyServer.sh
 
-    #COMM="sh $fnProxy $BASEDIR $DOCKERCMD && sh $fnAdmin $BASEDIR $DOCKERCMD"
-    COMM="sh $fnProxy $PWD $DOCKERCMD"
+    COMM="sh $fnProxy $BASEDIR $DOCKERCMD && sh $fnAdmin $BASEDIR $DOCKERCMD"
     eval " $COMM"
     echo "Success : Done!"
 else
