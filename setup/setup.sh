@@ -18,7 +18,8 @@ case "$(uname -s)" in
      ;;
 esac
 
-ROOTPATH="$(dirname "$PWD")"
+SCRIPTDIR=$(cd `dirname $0` && pwd)
+ROOTPATH="$(dirname "$SCRIPTDIR")"
 
 
 if [ $DOCKERCMD == '' ]; then
@@ -54,7 +55,7 @@ then
 
     for (( i=1; i < 60; i+=1 ))
     do
-        echo "* * * * *  (sleep $i ; echo _UI_APP && sh $ROOTPATH/cronjob.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log)" >> /var/at/tabs/$SUDO_USER
+        echo "* * * * *  (sleep $i ; echo _UI_APP && sh $ROOTPATH/setup/cronjob.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log)" >> /var/at/tabs/$SUDO_USER
     done
 
     echo "Success : your application is ready!"

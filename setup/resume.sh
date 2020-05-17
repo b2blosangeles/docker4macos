@@ -1,7 +1,9 @@
 #!/bin/bash
 
 DOCKERCMD=$(command -v docker)
-ROOTPATH="$(dirname "$PWD")"
+
+SCRIPTDIR=$(cd `dirname $0` && pwd)
+ROOTPATH="$(dirname "$SCRIPTDIR")"
 
 if [ $DOCKERCMD == '' ]; then
     echo "Error : Docker installation and running is required!"

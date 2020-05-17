@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DOCKERCMD=$1
-SCRIPTDIR=$(dirname "$0")
+SCRIPTDIR=$(cd `dirname $0` && pwd)
 ROOTPATH="$(dirname "$SCRIPTDIR")"
 
 sts=1
