@@ -32,8 +32,14 @@ if [ $USER != $SUDO_USER ] && [ $USER == "root" ] ;
 then
 
     docker network rm network_ui_app &> /dev/null
-    docker stop container $(docker ps  -q -a --filter="name=local_channel_") &> /dev/null
-    docker rm container $(docker ps  -q -a --filter="name=local_channel_") &> /dev/null
+    docker stop container $(docker ps  -q -a --filter="name=local_admin_") &> /dev/null
+    docker rm container $(docker ps  -q -a --filter="name=local_admin_") &> /dev/null
+
+    docker stop container $(docker ps  -q -a --filter="name=local_proxy_") &> /dev/null
+    docker rm container $(docker ps  -q -a --filter="name=local_proxy_") &> /dev/null
+
+    docker stop container $(docker ps  -q -a --filter="name=local_sites_") &> /dev/null
+    docker rm container $(docker ps  -q -a --filter="name=local_sites_") &> /dev/null
 
     docker system prune --all --force &> /dev/null
 
