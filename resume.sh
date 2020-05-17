@@ -31,6 +31,15 @@ fi
 if [ $USER != $SUDO_USER ] && [ $USER == "root" ] ;
 then
 
+    docker network rm network_ui_app &> /dev/null
+
+    docker network create \
+        --driver=bridge \
+        --subnet=10.10.10.0/16 \
+        --ip-range=10.10.10.0/24 \
+        --gateway=10.10.10.254 \
+        network_ui_app &> /dev/null
+        
     fnAdmin=$PWD/_localChannel/bootup/adminServer.sh
     fnProxy=$PWD/_localChannel/bootup/proxyServer.sh
 
