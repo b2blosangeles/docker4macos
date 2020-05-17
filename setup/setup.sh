@@ -53,7 +53,7 @@ then
     cp -f /tmp/crontab_$SUDO_USER  /var/at/tabs/$SUDO_USER
     chmod 777 /etc/hosts
 
-    echo "@reboot echo _UI_APP && sh $ROOTPATH/setup/cronStart.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log" >> /var/at/tabs/$SUDO_USER
+    echo "@reboot echo _UI_APP && sh $ROOTPATH/setup/cronStart.sh $DOCKERCMD >> $ROOTPATH/log/cronjob_$SUDO_USER.log" >> /var/at/tabs/$SUDO_USER
 
     for (( i=1; i < 60; i+=1 ))
     do

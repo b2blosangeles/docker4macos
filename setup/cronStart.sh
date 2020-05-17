@@ -14,7 +14,7 @@ do
      sleep 1
 done
 
-echo "running adminServer.sh and proxyServer.sh"
+echo "Running adminServer.sh and proxyServer.sh - at - $(date +"%m/%d/%Y %H:%M:%S")"
 
 fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
 fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
@@ -22,4 +22,4 @@ fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DOCKERCMD"
 eval " $COMM"
 
-echo "Done adminServer.sh and proxyServer.sh"
+echo "Done adminServer.sh and proxyServer.sh - at - $(date +"%m/%d/%Y %H:%M:%S")"
