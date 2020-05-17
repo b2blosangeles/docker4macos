@@ -6,7 +6,7 @@ var path = require('path');
 const port = 10000;
 var env = {
     root : __dirname,
-    uiTrinetLocalFolder : path.join(__dirname, '..')
+    uiAppLocalFolder : path.join(__dirname, '..')
 }
 
 app.use(bodyParser.json() );       // to support JSON-encoded bodies

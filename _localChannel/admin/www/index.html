@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/bootstrap.4.4.1.min.css">
+<link rel="stylesheet" href="/css/main.css">
+<script src="/js/query-3.5.0.min.js"></script>
+<script src="/js/popper.1.12.9.min.js"></script>
+<script src="/js/bootstrap.4.4.1.min.js"></script>
+
+
+<script src="/js/vue_integration.js"></script>
+<script src="/js/main.js"></script>
+<title>UI Development Environment for MacOS</title>
+</head>
+<body>
+  <div class="container-fluid m-0 mt-2" id="vHostApp">
+    <div class="row">
+      <div class="col-1 p-0"></div>
+      <div class="col-10 p-0">
+        <app-header></app-header>
+      </div>
+      <div class="col-1 p-0"></div>
+    </div> 
+    <div class="row">
+      <div class="col-1 p-0"></div>
+      <div class="col-10 p-0">
+          <div class="container-fluid m-0">
+            <div class="row">
+
+              <div class="col-4 p-0">
+                <v-host-form></v-host-form>
+              </div>
+              <div class="col-8 p-0">
+                <v-host-list></v-host-list>
+              </div>
+              
+            </div>
+            <data-engine ref="dataEngine"></data-engine>
+            <pop-up-modal></pop-up-modal>
+            <spinner></spinner>
+        </div>
+      </div>
+      <div class="col-1 p-0"></div>
+    </div>
+</div>
+
+</body>
+</html>
