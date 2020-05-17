@@ -32,12 +32,12 @@ if [ $USER != $SUDO_USER ] && [ $USER == "root" ] ;
 then
 
     docker network rm network_ui_app &> /dev/null
-    docker stop container $(docker ps  -q -a --filter="name=local_channel_")
-    docker rm container $(docker ps  -q -a --filter="name=local_channel_")
+    docker stop container $(docker ps  -q -a --filter="name=local_channel_") &> /dev/null
+    docker rm container $(docker ps  -q -a --filter="name=local_channel_") &> /dev/null
 
-    docker system prune --all --force
+    docker system prune --all --force &> /dev/null
 
-    rm -fr $PWD/_localChannel/admin/DOCKERCMD.json
+    rm -fr $PWD/_localChannel/admin/DOCKERCMD.json &> /dev/null
     
     sed '/echo _UI_APP/d' /var/at/tabs/$SUDO_USER  > /tmp/crontab_$SUDO_USER
     cp -f /tmp/crontab_$SUDO_USER  /var/at/tabs/$SUDO_USER
