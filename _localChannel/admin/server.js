@@ -15,8 +15,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 app.get(/(.+)$/i, (req, res) => {
-    res.send('hello w');
-    return true;
     try {
         delete require.cache[__dirname + '/app.js'];
         var APP = require(__dirname + '/app.js');
