@@ -7,7 +7,8 @@ var path = require('path');
 const port = 10000;
 var env = {
     root : __dirname,
-    uiAppLocalFolder : path.join(__dirname, '..')
+    uiAppLocalFolder : path.join(__dirname, '..'),
+    sites: '/var/sitesSetting'
 }
 var pkg = {
     tpl : ECT({ watch: true, cache: false, root: __dirname + '/views', ext : '.ect' })
