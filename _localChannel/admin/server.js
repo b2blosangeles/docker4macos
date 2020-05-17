@@ -30,8 +30,8 @@ app.all('*', function(req, res, next) {
 
 app.get(/(.+)$/i, (req, res) => {
     try {
-        delete require.cache[__dirname + '/app.js'];
-        var APP = require(__dirname + '/app.js');
+        delete require.cache[__dirname + '/modules/appRouter.js'];
+        var APP = require(__dirname + '/modules/appRouter.js');
         var app = new APP(env, pkg, req, res);
         app.get();
     } catch (err) {
@@ -42,8 +42,8 @@ app.get(/(.+)$/i, (req, res) => {
 
 app.post(/(.+)$/i, (req, res) => {
     try {
-        delete require.cache[__dirname + '/app.js'];
-        var APP = require(__dirname + '/app.js');
+        delete require.cache[__dirname + '/modules/appRouter.js'];
+        var APP = require(__dirname + '/modules/appRouter.js');
         var app = new APP(env, pkg, req, res);
         app.post();
     } catch (err) {
