@@ -43,7 +43,9 @@ then
         --ip-range=10.10.10.0/24 \
         --gateway=10.10.10.254 \
         network_ui_app &> /dev/null
-
+        
+    mkdir -p $ROOTPATH/log
+    chmod 777 $ROOTPATH/log
 
     echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$ROOTPATH\"", "\"OSENV\"": "\"$OSENV\""} > $ROOTPATH/_localChannel/admin/DOCKERCMD.json
     
@@ -55,7 +57,8 @@ then
 
     for (( i=1; i < 60; i+=1 ))
     do
-        echo "* * * * *  (sleep $i ; echo _UI_APP && sh $ROOTPATH/setup/cronjob.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log)" >> /var/at/tabs/$SUDO_USER
+      COMM="sh $ROOTPATH/setup/cronjob.sh $DOCKERCMD >> $ROOTPATH/log/crontask_$SUDO_USER.log"
+      echo "* * * * *  (sleep $i ; echo _UI_APP && $COMM)" >> /var/at/tabs/$SUDO_USER
     done
 
     echo "Success : your application is ready!"

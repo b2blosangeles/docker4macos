@@ -25,6 +25,7 @@ for f in "$folder"/*; do
 
     fn=/tmp/SH_$(basename $f)_$(date +%s%N).sh
     cmdd="cp -fr $f $fn && rm -fr $f && sh $fn $BASEDIR $DOCKERCMD && rm -fr $fn && rm -fr $markfile "
+    echo "-- Ran script $fn -- at $(date +"%m/%d/%Y %H:%M:%S")"
     eval " $cmdd"
   fi
 done
