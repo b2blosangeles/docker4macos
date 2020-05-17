@@ -1,7 +1,8 @@
 #!/bin/bash
 
 DOCKERCMD=$1
-ROOTPATH="$(dirname "$PWD")"
+SCRIPTDIR=$(dirname "$0")
+ROOTPATH="$(dirname "$SCRIPTDIR")"
 
 sts=1
 until [ $sts == 0 ]
