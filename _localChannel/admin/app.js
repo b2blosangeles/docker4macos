@@ -1,5 +1,5 @@
 (function() {
-    var obj = function(env, req, res) {
+    var obj = function(env, pkg, req, res) {
         fs = require('fs');
         delete require.cache[__dirname + '/moduleHosts.js'];
         var MHosts = require(__dirname + '/moduleHosts.js');
@@ -11,7 +11,7 @@
                   if(err == null) {
                     res.sendFile(fn);
                   } else  {
-                    res.send('404! the page does not exist!');
+                    res.render('html/page404.ect');
                   }
             });
         }
