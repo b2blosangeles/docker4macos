@@ -1,30 +1,10 @@
 #!/bin/bash
+
 DOCKERCMD=$(command -v docker)
-OSENV=""
-case "$(uname -s)" in
-
-   Darwin)
-     OSENV='Mac'
-     ;;
-   Linux)
-     OSENV='Linux'
-     ;;
-
-   CYGWIN*|MINGW32*|MSYS*|MINGW*)
-     OSENV='MS Windows'
-     ;;
-   *)
-     OSENV='' 
-     ;;
-esac
+ROOTPATH="$(dirname "$PWD")"
 
 if [ $DOCKERCMD == '' ]; then
     echo "Error : Docker installation and running is required!"
-    exit 0
-fi
-
-if [ $OSENV != "Mac" ]; then
-    echo "Error : We only support Mac OS X now!"
     exit 0
 fi
 
@@ -40,10 +20,10 @@ then
         --gateway=10.10.10.254 \
         network_ui_app &> /dev/null
         
-    fnAdmin=$PWD/_localChannel/bootup/adminServer.sh
-    fnProxy=$PWD/_localChannel/bootup/proxyServer.sh
+    fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
+    fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
-    COMM="sh $fnProxy $PWD $DOCKERCMD && sh $fnAdmin $PWD $DOCKERCMD"
+    COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DOCKERCMD"
     eval " $COMM"
     echo "Success : Done!"
 else

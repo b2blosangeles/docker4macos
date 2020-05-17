@@ -18,6 +18,9 @@ case "$(uname -s)" in
      ;;
 esac
 
+ROOTPATH="$(dirname "$PWD")"
+
+
 if [ $DOCKERCMD == '' ]; then
     echo "Error : Docker installation and running is required!"
     exit 0
@@ -41,17 +44,17 @@ then
         network_ui_app &> /dev/null
 
 
-    echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$PWD\"", "\"OSENV\"": "\"$OSENV\""} > $PWD/_localChannel/admin/DOCKERCMD.json
+    echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$ROOTPATH\"", "\"OSENV\"": "\"$OSENV\""} > $ROOTPATH/_localChannel/admin/DOCKERCMD.json
     
     sed '/echo _UI_APP/d' /var/at/tabs/$SUDO_USER  > /tmp/crontab_$SUDO_USER
     cp -f /tmp/crontab_$SUDO_USER  /var/at/tabs/$SUDO_USER
     chmod 777 /etc/hosts
 
-    echo "@reboot echo _UI_APP && sh $PWD/cronStart.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log" >> /var/at/tabs/$SUDO_USER
+    echo "@reboot echo _UI_APP && sh $ROOTPATH/setup/cronStart.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log" >> /var/at/tabs/$SUDO_USER
 
     for (( i=1; i < 60; i+=1 ))
     do
-        echo "* * * * *  (sleep $i ; echo _UI_APP && sh $PWD/cronjob.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log)" >> /var/at/tabs/$SUDO_USER
+        echo "* * * * *  (sleep $i ; echo _UI_APP && sh $ROOTPATH/cronjob.sh $DOCKERCMD >> /tmp/cronjob_$SUDO_USER.log)" >> /var/at/tabs/$SUDO_USER
     done
 
     echo "Success : your application is ready!"

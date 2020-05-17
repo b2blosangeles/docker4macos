@@ -1,6 +1,7 @@
 #!/bin/bash
+
 DOCKERCMD=$1
-BASEDIR="$( cd "$( dirname "$0" )" && pwd )"
+ROOTPATH="$(dirname "$PWD")"
 
 sts=1
 until [ $sts == 0 ]
@@ -12,8 +13,8 @@ do
      sleep 1
 done
 
-fnAdmin=$BASEDIR/_localChannel/bootup/adminServer.sh
-fnProxy=$BASEDIR/_localChannel/bootup/proxyServer.sh
+fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
+fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
-COMM="sh $fnProxy $BASEDIR $DOCKERCMD && sh $fnAdmin $BASEDIR $DOCKERCMD"
+COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DOCKERCMD"
 eval " $COMM"
