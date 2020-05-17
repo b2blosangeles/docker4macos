@@ -1,0 +1,1 @@
+This folder will store customer data. all vertual hosting code and data.
