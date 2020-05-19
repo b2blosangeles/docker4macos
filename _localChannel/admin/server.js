@@ -8,9 +8,10 @@ const port = 10000;
 var env = {
     root : __dirname,
     uiAppLocalFolder : path.join(__dirname, '..'),
-    sites: '/var/sitesSetting'
+    sites: '/var/sites'
 }
 var pkg = {
+    crowdProcess : require(__dirname + '/vendor/crowdProcess/crowdProcess.js'),
     tpl : ECT({ watch: true, cache: false, root: __dirname + '/views', ext : '.ect' })
 }
 

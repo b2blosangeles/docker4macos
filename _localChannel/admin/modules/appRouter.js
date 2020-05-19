@@ -52,16 +52,15 @@
 		}
   
 		this.postSaveHost = (data) => {
-		  var me = this;
-		  // -- todo---
-		  delete require.cache[env.root+ '/modules/moduleGit.js'];
-		  var MGit = require(env.root+ '/modules/moduleGit.js');
-		  var git = new MGit(env);
-		  git.gitClone(req.body, function(result) {
-			hosts.save(data, function(err) {
-				me.postLoadList();
+			var me = this;
+			delete require.cache[env.root+ '/modules/moduleGit.js'];
+			var MGit = require(env.root+ '/modules/moduleGit.js');
+			var git = new MGit(env);
+			git.gitClone(req.body, function(result) {
+				hosts.save(data, function(err) {
+					me.postLoadList();
+				});
 			});
-		  });
 		}
 		
 		this.loadDockersList = () => {

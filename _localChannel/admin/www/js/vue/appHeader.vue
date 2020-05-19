@@ -1,7 +1,7 @@
 <template>
     <div class="card shadow m-2">
         <div class="card-body">
-            <h4>UI Development Environment for MacOS</h4>
+            <h4>Docker IDE for MacOS</h4>
         </div> 
     </div> 
 </template>

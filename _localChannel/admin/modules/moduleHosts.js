@@ -3,9 +3,12 @@
         var fs = require('fs');
         var exec = require('child_process').exec;
 
-        var fn = env.root + '/setting/hosts.json';
-        var fnHosts = '/var/_localChannel/tasks/refreshHosts.sh';
-        var fnDocker = '/var/_localChannel/editDocker.sh';
+        var fn = env.sites + '/setting/hosts.json';
+        var fnHosts = env.sites + '/setting/refreshHosts.sh';
+        var fnDocker = env.sites + '/setting/editDocker.sh';
+
+      //  var fnHosts = '/var/_localChannel/tasks/refreshHosts.sh';
+      //  var fnDocker = '/var/_localChannel/editDocker.sh';
 
         this.callList = (callback) => {
             var me = this;
@@ -36,7 +39,9 @@
                 JSON.stringify(list), (err) => {
                     me.saveHosts(
                         function() {
-                            callback(err);
+                            me.createVhostConfig(list, (err1) => {
+                                callback(err);
+                            });
                         }
                     );
             });
@@ -105,7 +110,7 @@
         }
         this.createVhostConfig = (list, callback) => {
             var me = this;
-            var fnVhostConfig = env.uiAppLocalFolder + '/proxyserver/sites/vHost.conf';
+            var fnVhostConfig = env.sites + '/setting/vHost.conf';
             var strVHostRec = '';
             for (v in list) {
                 strVHostRec += me.vHostRec({
@@ -137,9 +142,11 @@
                 JSON.stringify(v), (err) => {
                     me.saveHosts(
                         function() {
-                            callback(err);
+                            me.createVhostConfig(list, (err1) => {
+                                callback(err);
+                            });
                         }
-                    );   
+                    );  
             });
         }
     }

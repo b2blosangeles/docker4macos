@@ -218,10 +218,11 @@ module.exports = {
 .noFormImage {
     min-width: 100%;
     min-height :512px;
-    background-image: url("/imgs/icon.png");
+    background-image: url("/imgs/icon1.png");
     background-color: transparent;
-    background-size: cover;
+    background-size: 100%;
     background-position: center;
+    background-repeat: no-repeat;
 }
 .dropdown-pick-docker {
     height:20em;
