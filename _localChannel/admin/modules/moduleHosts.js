@@ -1,11 +1,13 @@
 (function() {
-    var obj = function(env) {
+    var obj = function(env, pkg) {
         var fs = require('fs');
         var exec = require('child_process').exec;
 
         var fn = env.sites + '/setting/hosts.json';
         var fnHosts = env.sites + '/setting/refreshHosts.sh';
         var fnDocker = env.sites + '/setting/editDocker.sh';
+
+        var CP = new pkg.crowdProcess();
 
       //  var fnHosts = '/var/_localChannel/tasks/refreshHosts.sh';
       //  var fnDocker = '/var/_localChannel/editDocker.sh';
@@ -26,13 +28,47 @@
         }
         this.save = (data, callback) => {
             var me = this;
+            var _f = {};
+            _f['saveHosts'] = function(cbk) {
+                me.saveHosts(data, cbk);
+            }
+            CP.serial(
+                _f, 
+                function() {
+                    callback()
+            }, 3000);
+        }
+
+        this.saveHosts = (data, callback) => {
+            var me = this;
             var err = {};
             var list = me.getList();
             var v = {
                 dockerFile : data['dockerFile'],
                 serverName : data['serverName'],
                 gitHub     : data['gitHub'],
-                branch     : data['branch']
+                branch     : data['branch'],
+                ports      : data['ports'],
+                unidx      : me.getUnIdx() 
+            }
+            list.push(v);
+            fs.writeFile(fn, 
+                JSON.stringify(list), (err) => {
+                    callback(err);
+            });
+        }
+/*
+        this.saveHosts = (data, callback) => {
+            var me = this;
+            var err = {};
+            var list = me.getList();
+            var v = {
+                dockerFile : data['dockerFile'],
+                serverName : data['serverName'],
+                gitHub     : data['gitHub'],
+                branch     : data['branch'],
+                ports      : data['ports'],
+                unidx      : me.getUnIdx() 
             }
             list.push(v);
             fs.writeFile(fn, 
@@ -45,6 +81,24 @@
                         }
                     );
             });
+        }
+*/
+        this.getUnIdx = () => {
+            var me = this;
+            var list = me.getList();
+            var idxList = [];
+
+            for (var i = 0; i < list.length; i++) { 
+                if (list[i].unidx) {
+                    idxList.push(list[i].unidx);
+                }
+            }
+            for (var i = 0; i < list.length; i++) {
+                if (idxList.indexOf(i+1) === -1) {
+                    return i + 1;
+                }
+            }
+            return list.length + 1;
         }
         this.saveHosts = (callback) => {
             var me = this;

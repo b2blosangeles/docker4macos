@@ -14,10 +14,18 @@
                                 </a>
                             </div>
                             <div class="col-9 p-0 m-0">
-                                Server name: <span class="text-info">{{item.serverName}}</span><br/>
+                                Server name: <span class="text-info">{{item.serverName}}</span>
+                                <span class="ml-3">
+                                    innerPort : <span class="text-info"> {{item.ports}}</span>
+                                </span>
+                                <span class="ml-3">
+                                    outerPort : <span class="text-info"> {{(item.unidx + 1) * 10000}}</span>
+                                </span>
+                                <br/>
                                 Docker file: <span class="text-info">{{item.dockerFile}}</span><br/>
                                 github : <span class="text-info"> {{item.gitHub}}</span><br/>
                                 branch : <span class="text-info"> {{item.branch}}</span>
+
                             </div>
                         </div>
                     </div>

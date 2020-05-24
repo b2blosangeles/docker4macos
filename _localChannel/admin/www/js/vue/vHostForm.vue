@@ -10,7 +10,7 @@
                 <label>Repository git URI *</label>
                 <input type="text" class="form-control" v-model="form.gitHub" @input="changedGit" placeholder="Repository git URI">
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="branches===null">
                 <div class="container-fluid border border-2 p-2 alert-secondary rounded">
                     <div class="row">
                         <div class="col-6">
@@ -25,7 +25,10 @@
                 </div>
             </div>
             <button type="button" v-if="branches===null" class="btn btn-info" v-on:click="gitRemoteBranchs(form)">Get branchs</button>
-
+            <div v-if="branches!==null" >
+                <input type="hidden" v-model="form.userName">
+                <input type="hidden"  v-model="form.password" >
+            </div>
             <div class="form-group" v-if="branches!==null" >
                 <label>Branche</label>
                 <select class="form-control" :required="true" v-model="form.branch">
@@ -40,6 +43,11 @@
             <div class="form-group" v-if="branches!==null" >
                 <label>Host ServerName * </label>
                 <input type="text" class="form-control" maxlength="64" v-model="form.serverName" placeholder="Host ServerName">
+            </div>
+
+            <div class="form-group" v-if="branches!==null" >
+                <label>Open Ports</label>
+                <input type="text" class="form-control" maxlength="64" v-model="form.ports" placeholder="ports">
             </div>
 
             <div class="form-group" v-if="branches!==null">
@@ -100,9 +108,11 @@ module.exports = {
     },
     methods : {
         initForm() {
+            var me = this;
             me.branches = null;
-            me.form.branch = 'master';
-            me.form.serverName = 'master';
+            me.form.branch = '';
+            me.form.serverName = '';
+            me.form.ports = '';
             me.form.dockerFile = '';
         },
         changedGit(e) {
@@ -193,10 +203,31 @@ module.exports = {
             }
             return (!me.errors.gitHub) ? true : false;
         },
+        portValidation() {
+            var me = this;
+            delete me.errors.ports;
+            if (!me.form.ports) {
+                me.errors.ports = 'ports required.';
+            } else if (me.form.ports) {
+                var l = me.form.ports.split(',');
+                for (var i = 0; i < l.length; i++) {
+                    if (isNaN(l[i])) {
+                        me.errors.ports = 'Incorrect port list.';
+                        return false;
+                    } else  if (l[i] > 9999) {
+                        me.errors.ports = 'all port should be less than 10000';
+                        return false;
+                    }
+                }
+            } 
+            return true ;
+        },
         formValidation() {
             var me = this;
             me.errors = {};
             me.gitValidation();
+            me.portValidation();
+
             if (!me.form.serverName) {
                 me.errors.serverName = 'ServerName required.';
             }

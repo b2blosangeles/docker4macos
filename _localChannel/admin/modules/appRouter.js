@@ -4,8 +4,9 @@
         fs = require('fs');
         delete require.cache[env.root+ '/modules/moduleHosts.js'];
         var MHosts = require(env.root+ '/modules/moduleHosts.js');
-		var hosts = new MHosts(env);
+		var hosts = new MHosts(env, pkg);
 		
+
 		this.get = function() {
             var me = this, p = req.params[0];
             var fn = env.root + '/www/' + p;
@@ -46,7 +47,6 @@
 			var MGit = require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env);
 			git.gitRemoteBranchs(req.body, function(result) {
-  
 			  res.send(result);
 			});
 		}
