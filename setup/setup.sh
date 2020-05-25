@@ -20,7 +20,7 @@ esac
 
 SCRIPTDIR=$(cd `dirname $0` && pwd)
 ROOTPATH="$(dirname "$SCRIPTDIR")"
-DATAPATH="$(dirname "$ROOTPATH")"
+DATAPATH="$(dirname "$ROOTPATH")"/data
 
 if [ $DOCKERCMD == '' ]; then
     echo "Error : Docker installation and running is required!"
@@ -44,20 +44,20 @@ then
         --gateway=10.10.10.254 \
         network_ui_app &> /dev/null
         
-    mkdir -p $ROOTPATH/log
-    chmod 777 $ROOTPATH/log
+    mkdir -p $DATAPATH/log
+    chmod 777 $DATAPATH/log
 
-    echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$ROOTPATH\"", "\"OSENV\"": "\"$OSENV\""} > $ROOTPATH/_localChannel/admin/DOCKERCMD.json
+    echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$ROOTPATH\"", "\"DATAPATH\"": "\"$DATAPATH\"", "\"OSENV\"": "\"$OSENV\""} > $DATAPATH/DOCKERCMD.json
     
     sed '/echo _UI_APP/d' /var/at/tabs/$SUDO_USER  > /tmp/crontab_$SUDO_USER
     cp -f /tmp/crontab_$SUDO_USER  /var/at/tabs/$SUDO_USER
     chmod 777 /etc/hosts
 
-    echo "@reboot echo _UI_APP && sh $ROOTPATH/setup/cronStart.sh $DOCKERCMD >> $ROOTPATH/log/cronjob_$SUDO_USER.log" >> /var/at/tabs/$SUDO_USER
+    echo "@reboot echo _UI_APP && sh $ROOTPATH/setup/cronStart.sh $DOCKERCMD >> $DATAPATH/log/cronjob_$SUDO_USER.log" >> /var/at/tabs/$SUDO_USER
 
     for (( i=1; i < 60; i+=1 ))
     do
-      COMM="sh $ROOTPATH/setup/cronjob.sh $DOCKERCMD >> $ROOTPATH/log/crontask_$SUDO_USER.log"
+      COMM="sh $ROOTPATH/setup/cronjob.sh $DOCKERCMD >> $DATAPATH/log/crontask_$SUDO_USER.log"
       echo "* * * * *  (sleep $i ; echo _UI_APP && $COMM)" >> /var/at/tabs/$SUDO_USER
     done
 

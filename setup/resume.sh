@@ -4,6 +4,7 @@ DOCKERCMD=$(command -v docker)
 
 SCRIPTDIR=$(cd `dirname $0` && pwd)
 ROOTPATH="$(dirname "$SCRIPTDIR")"
+DATAPATH="$(dirname "$ROOTPATH")"/data
 
 if [ $DOCKERCMD == '' ]; then
     echo "Error : Docker installation and running is required!"
@@ -25,7 +26,7 @@ then
     fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
     fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
-    COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DOCKERCMD"
+    COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DATAPATH $DOCKERCMD"
     eval " $COMM"
     echo "Success : Done!"
 else

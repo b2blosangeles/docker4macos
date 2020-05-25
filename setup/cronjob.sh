@@ -3,9 +3,10 @@ DOCKERCMD=$1
 
 SCRIPTDIR=$(cd `dirname $0` && pwd)
 ROOTPATH="$(dirname "$SCRIPTDIR")"
+DATAPATH="$(dirname "$ROOTPATH")"/data
 
-mkdir -p $ROOTPATH/_localChannel/tasks
-folder=$ROOTPATH/_localChannel/tasks
+mkdir -p $DATAPATH/tasks
+folder=$DATAPATH/tasks
 mkdir -p /tmp/_localChannel
 markfile=/tmp/_localChannel/mark.data
 

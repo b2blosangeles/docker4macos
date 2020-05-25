@@ -3,6 +3,7 @@
 DOCKERCMD=$1
 SCRIPTDIR=$(cd `dirname $0` && pwd)
 ROOTPATH="$(dirname "$SCRIPTDIR")"
+DATAPATH="$(dirname "$ROOTPATH")"/data
 
 sts=1
 until [ $sts == 0 ]
@@ -19,7 +20,7 @@ echo "\n=== $(date +"%m/%d/%Y %H:%M:%S") -- Running -- adminServer.sh and proxyS
 fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
 fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
-COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DOCKERCMD"
+COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DATAPATH $DOCKERCMD"
 eval " $COMM"
 
 echo "===$(date +"%m/%d/%Y %H:%M:%S") -- Done -- adminServer.sh and proxyServer.sh ===\n\n"

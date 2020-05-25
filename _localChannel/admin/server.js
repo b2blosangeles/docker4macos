@@ -7,8 +7,9 @@ var path = require('path');
 const port = 10000;
 var env = {
     root : __dirname,
+    dataFolder : '/var/_localdata',
     uiAppLocalFolder : path.join(__dirname, '..'),
-    sites: '/var/sites'
+    sites: '/var/_localdata/sites'
 }
 var pkg = {
     crowdProcess : require(__dirname + '/vendor/crowdProcess/crowdProcess.js'),
