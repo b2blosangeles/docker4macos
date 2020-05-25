@@ -7,9 +7,9 @@ var path = require('path');
 const port = 10000;
 var env = {
     root : __dirname,
-    dataFolder : '/var/_localdata',
-    uiAppLocalFolder : path.join(__dirname, '..'),
-    sites: '/var/_localdata/sites'
+    dataFolder : '/var/_localData',
+    appFolder : '/var/_localApp',
+    sites: '/var/_localData/sites'
 }
 var pkg = {
     crowdProcess : require(__dirname + '/vendor/crowdProcess/crowdProcess.js'),
@@ -31,6 +31,8 @@ app.all('*', function(req, res, next) {
 });
 
 app.get(/(.+)$/i, (req, res) => {
+    res.send(env);
+    return true;
     try {
         delete require.cache[__dirname + '/modules/appRouter.js'];
         var APP = require(__dirname + '/modules/appRouter.js');

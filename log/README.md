@@ -1,1 +1,0 @@
-This folder will store log data by startup cron and tasks cron.
