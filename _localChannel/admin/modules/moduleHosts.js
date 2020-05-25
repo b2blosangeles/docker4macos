@@ -3,9 +3,9 @@
         var fs = require('fs');
         var exec = require('child_process').exec;
 
-        var fn = env.sites + '/setting/hosts.json';
-        var fnHosts = env.sites + '/setting/refreshHosts.sh';
-        var fnDocker = env.sites + '/setting/addDocker.sh';
+        var fn = env.dataFolder + '/setting/hosts.json';
+        var fnHosts = env.dataFolder + '/setting/refreshHosts.sh';
+        var fnDocker = env.dataFolder + '/setting/addDocker.sh';
 
         var CP = new pkg.crowdProcess();
 
@@ -45,8 +45,16 @@
         }
         this.removeHost = (serverName, callback) => {
             var me = this;
+            var dirn = env.sites;
             var _f={};
-
+            var exec = require('child_process').exec;
+            _f['deleteCode'] = function(cbk) {
+                cmd = 'rm -fr ' + dirn + '/' + serverName;
+                exec(cmd, {maxBuffer: 1024 * 2048},
+                    function(error, stdout, stderr) {
+                        cbk(true);
+                });
+            };
             _f['SitesHosts'] = function(cbk) {
                 me.deleteSitesHosts(serverName, cbk);
             };

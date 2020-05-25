@@ -45,7 +45,8 @@ then
         network_ui_app &> /dev/null
         
     mkdir -p $DATAPATH/log
-    mkdir -p $DATAPATH/sites/setting
+    mkdir -p $DATAPATH/sites
+    mkdir -p $DATAPATH/setting
     chmod -R 777 $DATAPATH
 
     echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$ROOTPATH\"", "\"DATAPATH\"": "\"$DATAPATH\"", "\"OSENV\"": "\"$OSENV\""} > $DATAPATH/DOCKERCMD.json

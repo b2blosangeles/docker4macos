@@ -34,7 +34,7 @@
         }
 
         this.gitClone = (gitRecord, callback) => {
-            var dirn = env.sites;
+            var dirn = env.sites + '/apps/';
             var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
             var uri_a = gitRecord.gitHub.match(regex);
             var uri = uri_a[1] + '://' + ((!gitRecord.userName) ? '' : 
