@@ -23,16 +23,32 @@
             } catch(e) {}
             return list;
         }
-        this.save = (opt, data, callback) => {
+        this.addHost = (data, callback) => {
+            var me = this;
+            var _f={};
+            _f['cloneCode'] = function(cbk) {
+                delete require.cache[env.root+ '/modules/moduleGit.js'];
+                var MGit = require(env.root+ '/modules/moduleGit.js');
+                var git = new MGit(env);
+                git.gitClone(data, function(result) {
+                    cbk(true);
+                });
+            };
+
+            _f['SitesHosts'] = function(cbk) {
+                me.saveSitesHosts(data, cbk);
+            };
+
+            CP.serial(_f, function(data) {
+                callback(CP.data.SitesHosts);
+            }, 30000);
+        }
+        this.removeHost = (serverName, callback) => {
             var me = this;
             var _f={};
 
             _f['SitesHosts'] = function(cbk) {
-                if (opt === 'add') {
-                    me.saveSitesHosts(data, cbk);
-                } else {
-                    me.deleteSitesHosts(data, cbk);
-                }
+                me.deleteSitesHosts(serverName, cbk);
             };
 
             CP.serial(_f, function(data) {

@@ -46,25 +46,20 @@
 			delete require.cache[env.root+ '/modules/moduleGit.js'];
 			var MGit = require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env);
-			git.gitRemoteBranchs(req.body, function(result) {
+			git.gitRemoteBranchs(req.body.data, function(result) {
 			  res.send(result);
 			});
 		}
   
 		this.postSaveHost = (data) => {
 			var me = this;
-			delete require.cache[env.root+ '/modules/moduleGit.js'];
-			var MGit = require(env.root+ '/modules/moduleGit.js');
-			var git = new MGit(env);
-			git.gitClone(req.body, function(result) {
-				hosts.save('add', data, function(err) {
-					me.postLoadList();
-				});
+			hosts.addHost(data, function(err) {
+				me.postLoadList();
 			});
 		}
 		this.postRemoveHost = (serverName) => {
 			var me = this;
-			hosts.save('delete', serverName, function(v) {
+			hosts.removeHost(serverName, function(v) {
 			  me.postLoadList();
 			});
 		}	

@@ -6,9 +6,9 @@
 
         this.gitRemoteBranchs = (gitRecord, callback) => {
             var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
-            var uri_a = gitRecord.data.gitHub.match(regex);
-            var uri = uri_a[1] + '://' + ((!gitRecord.data.userName) ? '' : 
-                (encodeURIComponent(gitRecord.data.userName) + ':' + encodeURIComponent(gitRecord.data.password) + '@'));
+            var uri_a = gitRecord.gitHub.match(regex);
+            var uri = uri_a[1] + '://' + ((!gitRecord.userName) ? '' : 
+                (encodeURIComponent(gitRecord.userName) + ':' + encodeURIComponent(gitRecord.password) + '@'));
             for (var i=4; i < uri_a.length; i++) {
                 uri +=  uri_a[i];
             }
@@ -36,17 +36,17 @@
         this.gitClone = (gitRecord, callback) => {
             var dirn = env.sites;
             var regex = /^(git|ssh|https?|git@[-\w.]+):(\/\/)?(.*@|)(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
-            var uri_a = gitRecord.data.gitHub.match(regex);
-            var uri = uri_a[1] + '://' + ((!gitRecord.data.userName) ? '' : 
-                (encodeURIComponent(gitRecord.data.userName) + ':' + encodeURIComponent(gitRecord.data.password) + '@'));
+            var uri_a = gitRecord.gitHub.match(regex);
+            var uri = uri_a[1] + '://' + ((!gitRecord.userName) ? '' : 
+                (encodeURIComponent(gitRecord.userName) + ':' + encodeURIComponent(gitRecord.password) + '@'));
             for (var i=4; i < uri_a.length; i++) {
                 uri +=  uri_a[i];
             }
-            var branchName = gitRecord.data.branch;
+            var branchName = gitRecord.branch;
 
-            var cmd = 'mkdir -p ' + dirn + ' && cd ' + dirn + ' && rm -fr ' + gitRecord.data.serverName + ' && git clone ' + 
-                    uri + ' ' + gitRecord.data.serverName +  ' && ' + 
-                    'cd ' + gitRecord.data.serverName  + ' && git checkout ' + branchName;
+            var cmd = 'mkdir -p ' + dirn + ' && cd ' + dirn + ' && rm -fr ' + gitRecord.serverName + ' && git clone ' + 
+                    uri + ' ' + gitRecord.serverName +  ' && ' + 
+                    'cd ' + gitRecord.serverName  + ' && git checkout ' + branchName;
 
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
