@@ -5,12 +5,9 @@
 
         var fn = env.sites + '/setting/hosts.json';
         var fnHosts = env.sites + '/setting/refreshHosts.sh';
-        var fnDocker = env.sites + '/setting/editDocker.sh';
+        var fnDocker = env.sites + '/setting/addDocker.sh';
 
         var CP = new pkg.crowdProcess();
-
-      //  var fnHosts = '/var/_localChannel/tasks/refreshHosts.sh';
-      //  var fnDocker = '/var/_localChannel/editDocker.sh';
 
         this.callList = (callback) => {
             var me = this;
@@ -26,22 +23,24 @@
             } catch(e) {}
             return list;
         }
-        this.save = (data, callback) => {
+        this.save = (opt, data, callback) => {
             var me = this;
-            var _f = {};
-            _f['saveHosts'] = function(cbk) {
-                me.saveHosts(data, cbk);
-            }
-            CP.serial(
-                _f, 
-                function() {
-                    callback()
-            }, 3000);
-        }
+            var _f={};
 
-        this.saveHosts = (data, callback) => {
+            _f['SitesHosts'] = function(cbk) {
+                if (opt === 'add') {
+                    me.saveSitesHosts(data, cbk);
+                } else {
+                    me.deleteSitesHosts(data, cbk);
+                }
+            };
+
+            CP.serial(_f, function(data) {
+                callback(CP.data.SitesHosts);
+            }, 30000);
+        }
+        this.saveSitesHosts = (data, callback) => {
             var me = this;
-            var err = {};
             var list = me.getList();
             var v = {
                 dockerFile : data['dockerFile'],
@@ -57,32 +56,20 @@
                     callback(err);
             });
         }
-/*
-        this.saveHosts = (data, callback) => {
+        this.deleteSitesHosts = (serverName, callback) => {
             var me = this;
-            var err = {};
-            var list = me.getList();
-            var v = {
-                dockerFile : data['dockerFile'],
-                serverName : data['serverName'],
-                gitHub     : data['gitHub'],
-                branch     : data['branch'],
-                ports      : data['ports'],
-                unidx      : me.getUnIdx() 
+            var list = me.getList(), v = [];
+
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].serverName !== serverName) {
+                    v.push(list[i]);
+                }
             }
-            list.push(v);
             fs.writeFile(fn, 
-                JSON.stringify(list), (err) => {
-                    me.saveHosts(
-                        function() {
-                            me.createVhostConfig(list, (err1) => {
-                                callback(err);
-                            });
-                        }
-                    );
+                JSON.stringify(v), (err) => {
+                    callback(err);
             });
         }
-*/
         this.getUnIdx = () => {
             var me = this;
             var list = me.getList();
@@ -120,14 +107,15 @@
             str += '$MARK$NLINE"' + "\n";
             str += 'echo "$p" > /etc/hosts' + "\n";
             fs.writeFile(fnHosts, str, (err) => {
-                me.createDocker(list[0], (err) => {
+                me.addDocker(list[0], (err) => {
                     me.createVhostConfig(list, (err1) => {
                         callback(err);
                     });
                 });
             });
         }
-        this.createDocker = (rec, callback) => {
+        
+        this.addDocker = (rec, callback) => {
             var me = this;
             var str='', err = {}, DOCKERCMD = {};
             try {
@@ -183,26 +171,7 @@
                 callback(err);
             });
         }
-        this.delete = (serverName, callback) => {
-            var me = this;
-            var list = me.getList(), v = [];
 
-            for (var i = 0; i < list.length; i++) {
-                if (list[i].serverName !== serverName) {
-                    v.push(list[i]);
-                }
-            }
-            fs.writeFile(fn, 
-                JSON.stringify(v), (err) => {
-                    me.saveHosts(
-                        function() {
-                            me.createVhostConfig(list, (err1) => {
-                                callback(err);
-                            });
-                        }
-                    );  
-            });
-        }
     }
     module.exports = obj;
 })()

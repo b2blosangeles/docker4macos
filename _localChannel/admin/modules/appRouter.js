@@ -57,12 +57,17 @@
 			var MGit = require(env.root+ '/modules/moduleGit.js');
 			var git = new MGit(env);
 			git.gitClone(req.body, function(result) {
-				hosts.save(data, function(err) {
+				hosts.save('add', data, function(err) {
 					me.postLoadList();
 				});
 			});
 		}
-		
+		this.postRemoveHost = (serverName) => {
+			var me = this;
+			hosts.save('delete', serverName, function(v) {
+			  me.postLoadList();
+			});
+		}	
 		this.loadDockersList = () => {
 			  delete require.cache[env.root+ '/modules/moduleDockerfile.js'];
 			  var MDockerfile= require(env.root+ '/modules/moduleDockerfile.js');
@@ -78,12 +83,7 @@
 			})
 		  }
   
-		  this.postRemoveHost = (serverName) => {
-			var me = this;
-			hosts.delete(serverName, function(v) {
-			  me.postLoadList();
-			});
-		  }		
+	
 
 	};
 	

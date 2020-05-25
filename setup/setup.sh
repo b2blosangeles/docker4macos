@@ -46,7 +46,7 @@ then
         
     mkdir -p $DATAPATH/log
     mkdir -p $DATAPATH/sites/setting
-    chmod 777 $DATAPATH/log
+    chmod -R 777 $DATAPATH
 
     echo {"\"DOCKERCMD\"":"\"$DOCKERCMD\"", "\"ROOT\"": "\"$ROOTPATH\"", "\"DATAPATH\"": "\"$DATAPATH\"", "\"OSENV\"": "\"$OSENV\""} > $DATAPATH/DOCKERCMD.json
     
