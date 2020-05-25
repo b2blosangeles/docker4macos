@@ -26,7 +26,7 @@ then
     fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
     fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
-    COMM="sh $fnProxy $ROOTPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DATAPATH $DOCKERCMD"
+    COMM="sh $fnProxy $ROOTPATH $DATAPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DATAPATH $DOCKERCMD"
     eval " $COMM"
     echo "Success : Done!"
 else

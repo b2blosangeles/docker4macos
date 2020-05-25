@@ -31,8 +31,6 @@ app.all('*', function(req, res, next) {
 });
 
 app.get(/(.+)$/i, (req, res) => {
-    res.send(env);
-    return true;
     try {
         delete require.cache[__dirname + '/modules/appRouter.js'];
         var APP = require(__dirname + '/modules/appRouter.js');
