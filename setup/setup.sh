@@ -20,7 +20,7 @@ esac
 
 SCRIPTDIR=$(cd `dirname $0` && pwd)
 ROOTPATH="$(dirname "$SCRIPTDIR")"
-
+DATAPATH="$(dirname "$ROOTPATH")"
 
 if [ $DOCKERCMD == '' ]; then
     echo "Error : Docker installation and running is required!"
