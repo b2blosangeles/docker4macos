@@ -16,10 +16,7 @@
                             <div class="col-9 p-0 m-0">
                                 Server name: <span class="text-info">{{item.serverName}}</span>
                                 <span class="ml-3">
-                                    innerPort : <span class="text-info"> {{item.ports}}</span>
-                                </span>
-                                <span class="ml-3">
-                                    outerPort : <span class="text-info"> {{(item.unidx + 1) * 10000}}</span>
+                                    innerPort - uterPort : <span class="text-info"> {{outerPorts(item)}} </span>
                                 </span>
                                 <br/>
                                 Docker file: <span class="text-info">{{item.dockerFile}}</span><br/>
@@ -59,8 +56,16 @@ module.exports = {
             var me = this;
             me.$parent.commonData.popUp.serverName = serverName;
             $('#confirm_modal').modal('show');
+        },
+        outerPorts(item) {
+            var me = this;
+            var str = '';
+            var p = item.ports.split(',');
+            for (var i = 0; i < p.length; i++) {
+                str += parseInt(p[i]) + '-' + parseInt(parseInt(item.unidx) + '0000') +  parseInt(p[i]) + ','
+            }
+            return str.replace(/\,$/,'');
         }
-
     }
 
 }

@@ -4,8 +4,10 @@
         var exec = require('child_process').exec;
 
         var fn = env.dataFolder + '/setting/hosts.json';
-        var fnHosts = env.dataFolder + '/setting/refreshHosts.sh';
-        var fnDocker = env.dataFolder + '/setting/addDocker.sh';
+        var fnHosts = env.dataFolder + '/tasks/refreshEtcHosts.sh';
+//        var fnDocker = env.dataFolder + '/setting/addDocker.sh';
+//        var fnRemoveDocker = env.dataFolder + '/setting/removeDocker.sh';
+
 
         var CP = new pkg.crowdProcess();
 
@@ -26,6 +28,8 @@
         this.addHost = (data, callback) => {
             var me = this;
             var _f={};
+            data.unidx = me.getUnIdx();
+
             _f['cloneCode'] = function(cbk) {
                 delete require.cache[env.root+ '/modules/moduleGit.js'];
                 var MGit = require(env.root+ '/modules/moduleGit.js');
@@ -37,6 +41,17 @@
 
             _f['SitesHosts'] = function(cbk) {
                 me.saveSitesHosts(data, cbk);
+            };
+
+            _f['EtcHosts'] = function(cbk) {
+                me.saveEtcHosts(cbk);
+            };
+            _f['VHosts'] = function(cbk) {
+                me.createVhostConfig(cbk);
+            };
+
+            _f['addDocker'] = function(cbk) {
+                me.addDocker(data, cbk);
             };
 
             CP.serial(_f, function(data) {
@@ -55,8 +70,21 @@
                         cbk(true);
                 });
             };
+
             _f['SitesHosts'] = function(cbk) {
                 me.deleteSitesHosts(serverName, cbk);
+            };
+
+            _f['EtcHosts'] = function(cbk) {
+                me.saveEtcHosts(cbk);
+            };
+
+            _f['VHosts'] = function(cbk) {
+                me.createVhostConfig(cbk);
+            };
+
+            _f['removeDocker'] = function(cbk) {
+                me.removeDocker(serverName, cbk);
             };
 
             CP.serial(_f, function(data) {
@@ -72,7 +100,7 @@
                 gitHub     : data['gitHub'],
                 branch     : data['branch'],
                 ports      : data['ports'],
-                unidx      : me.getUnIdx() 
+                unidx      : data['unidx'] 
             }
             list.push(v);
             fs.writeFile(fn, 
@@ -111,7 +139,7 @@
             }
             return list.length + 1;
         }
-        this.saveHosts = (callback) => {
+        this.saveEtcHosts = (callback) => {
             var me = this;
             var str='',
                 err = {};
@@ -126,41 +154,80 @@
             var list = me.getList();
             str += 'p="$v $NLINE$NLINE$MARK$NLINE';
             for (var i=0; i < list.length; i++) {
-                str += '"127.0.0.1"$TABL"' + list[i].serverName + '_x3"$NLINE';
+                str += '"127.0.0.1"$TABL"' + list[i].serverName + '_local"$NLINE';
             }
             str += '$MARK$NLINE"' + "\n";
             str += 'echo "$p" > /etc/hosts' + "\n";
             fs.writeFile(fnHosts, str, (err) => {
-                me.addDocker(list[0], (err) => {
-                    me.createVhostConfig(list, (err1) => {
-                        callback(err);
-                    });
-                });
+                callback(err);
             });
         }
-        
+
+        this.copyToTasks = (fname, fnTask, cbk) => {
+            var cmd = 'cp -fr ' + fname + ' ' + fnTask;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    cbk(true);
+            });
+        }
+        this.removeBootupFile = (fname, cbk) => {
+            var cmd = 'rm -fr ' + fname;
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    cbk(true);
+            });
+        }
+
         this.addDocker = (rec, callback) => {
             var me = this;
             var str='', err = {}, DOCKERCMD = {};
             try {
-                delete require.cache[env.root + '/DOCKERCMD.json'];
-                DOCKERCMD = require(env.root + '/DOCKERCMD.json');
+               delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
+               DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
             } catch (e) {};
-
+           
             var dname = rec.serverName.toLowerCase();
             var iname = rec.dockerFile.toLowerCase();
 
             str += DOCKERCMD.DOCKERCMD + ' build -f  ' + DOCKERCMD.ROOT + '/_localChannel/admin/dockers/' + rec.dockerFile + ' -t ' + iname + '-image .'  + "\n";
             str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
             str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
-
-            str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app -p 10080:80 -p 103000:3000 -p 104200:4200 -v ';
-            str += '"'+ DOCKERCMD.ROOT + '/_localChannel/admin/sites/' + dname;
+            
+            var p_str = '', p = rec.ports.split(',');
+            
+            for (var i = 0; i < p.length; i++) {
+                p_str += ' -p ' + (parseInt(rec.unidx + '0000') + parseInt(p[i])) + ':' + parseInt(p[i]) + ' ';
+            }
+            
+            str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str + ' -v ';
+            str += '"'+ DOCKERCMD.DATAPATH + '/sites/' + dname;
             str += '":/var/_localChannel --name site_channel_container-' + dname + '  ' + iname + '-image';
             str += "\n";
 
+            var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname +'.sh';
+            var fnTask = env.dataFolder + '/tasks/addDocker_' + dname +'.sh';
+
             fs.writeFile(fnDocker, str, (err) => {
-                callback(err);
+                me.copyToTasks(fnDocker, fnTask, callback);
+             //   callback(err);
+            });
+        }
+        this.removeDocker = (dname, callback) => {
+            var me = this;
+            var str='', DOCKERCMD = {};
+            try {
+               delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
+               DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
+            } catch (e) {};
+
+            str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
+            str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
+
+            var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname + '.sh';
+            var fnRemoveDocker = env.dataFolder + '/tasks/removeDocker.sh';
+
+            fs.writeFile(fnRemoveDocker, str, (err) => {
+                me.removeBootupFile(fnDocker, callback);
             });
         }
         this.vHostRec = (rec) => {
@@ -174,22 +241,21 @@
             str += '</VirtualHost>' + "\n\n";
             return str;
         }
-        this.createVhostConfig = (list, callback) => {
+        this.createVhostConfig = (callback) => {
             var me = this;
-            var fnVhostConfig = env.sites + '/setting/vHost.conf';
+            var list = me.getList();
+            var fnVhostConfig = env.dataFolder + '/setting/vHost.conf';
             var strVHostRec = '';
             for (v in list) {
-                strVHostRec += me.vHostRec({
-                    port        : 3000,
-                    serverName  : list[v].serverName,
-                    ip  : '10.10.10.254',
-                    innerPort  : '3000'
-                }) + me.vHostRec({
-                    port        : 80,
-                    serverName  : list[v].serverName,
-                    ip  : '10.10.10.254',
-                    innerPort  : '4200'
-                });
+                var port_a = list[v].ports.split(',');
+                for (var i = 0; i < port_a.length; i++) {
+                    strVHostRec += me.vHostRec({
+                        port        :  10000 * parseInt(list[v].unidx + '') + parseInt(port_a[i]),
+                        serverName  : list[v].serverName,
+                        ip  : '10.10.10.254',
+                        innerPort  : parseInt(port_a[i])
+                    })
+                }
             }
             fs.writeFile(fnVhostConfig, strVHostRec, (err) => {
                 callback(err);

@@ -15,4 +15,4 @@ RUN npm install etc
 RUN npm install express
 RUN npm install body-parser
 
-ENTRYPOINT cd /var/_local/ && node server.js
+ENTRYPOINT cd /var/_localChannel/ && node server.js
