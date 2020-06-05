@@ -5,6 +5,7 @@
 
         var fn = env.dataFolder + '/setting/hosts.json';
         var fnHosts = env.dataFolder + '/tasks/refreshEtcHosts.sh';
+        var fnRefreshProxy = env.dataFolder + '/tasks/fnRefreshProxy.sh';
 //        var fnDocker = env.dataFolder + '/setting/addDocker.sh';
 //        var fnRemoveDocker = env.dataFolder + '/setting/removeDocker.sh';
 
@@ -54,6 +55,10 @@
                 me.addDocker(data, cbk);
             };
 
+            _f['refreshProxy'] = function(cbk) {
+                me.refreshProxy(cbk);
+            };
+
             CP.serial(_f, function(data) {
                 callback(CP.data.SitesHosts);
             }, 30000);
@@ -85,6 +90,10 @@
 
             _f['removeDocker'] = function(cbk) {
                 me.removeDocker(serverName, cbk);
+            };
+
+            _f['refreshProxy'] = function(cbk) {
+                me.refreshProxy(cbk);
             };
 
             CP.serial(_f, function(data) {
@@ -177,6 +186,22 @@
             exec(cmd, {maxBuffer: 1024 * 2048},
                 function(error, stdout, stderr) {
                     cbk(true);
+            });
+        }
+
+        this.refreshProxy = (callback) => {
+            var me = this;
+            var str='', err = {}, DOCKERCMD = {};
+            try {
+               delete require.cache[env.dataFolder  + '/DOCKERCMD.json'];
+               DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
+            } catch (e) {};
+           
+            str += DOCKERCMD.DOCKERCMD + ' restart local_proxy_container ';
+            str += "\n";
+
+            fs.writeFile(fnRefreshProxy, str, (err) => {
+               callback(true)
             });
         }
 
