@@ -64,6 +64,10 @@ then
       echo "* * * * *  (sleep $i ; echo _UI_APP && $COMM)" >> /var/at/tabs/$SUDO_USER
     done
 
+    sed '/#--UI_ADMIN_LOCAL_S--/, /#--UI_ADMIN_LOCAL_E--/d' /etc/hosts  > /tmp/etc_hosts
+    echo "#--UI_ADMIN_LOCAL_S--\n127.0.0.1\tadmin.local\n127.0.0.1\tadmin_local\n#--UI_ADMIN_LOCAL_E--" >>  /tmp/etc_hosts
+    cp -f /tmp/etc_hosts /etc/hosts 
+
     echo "Success : your application is ready!"
 else
     echo "Error : Need sudo run the command!"

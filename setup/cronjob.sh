@@ -21,7 +21,9 @@ for f in "$folder"/*; do
   if [ -f "$markfile" ]; then
     break;
   fi
+
   if [ -f "$f" ]; then
+
     echo $f >  $markfile
 
     fn=/tmp/SH_$(basename $f)_$(date +%s%N).sh

@@ -145,18 +145,20 @@
                 err = {};
 
             str += "#!/bin/bash\n";
-            str += 'MARK="#--UI_MAC_LOCAL_REC--"' + "\n";
+            str += 'MARKS="#--UI_MAC_LOCAL_S--"' + "\n";
+            str += 'MARKE="#--UI_MAC_LOCAL_E--"' + "\n";
             str += 'NLINE=$' + "'" + '\\n' + "'\n";
             str += 'TABL=$' + "'" + '\\t' + "'\n";
         
-            str += 'v=$(sed "/"$MARK"/,/"$MARK"/d" /etc/hosts)' + "\n";
+            str += 'v=$(sed "/"$MARKS"/,/"$MARKE"/d" /etc/hosts)' + "\n";
 
             var list = me.getList();
-            str += 'p="$v $NLINE$NLINE$MARK$NLINE';
+            str += 'p="$v $NLINE$NLINE$MARKS$NLINE';
             for (var i=0; i < list.length; i++) {
+                str += '"127.0.0.1"$TABL"' + list[i].serverName + '.local"$NLINE';
                 str += '"127.0.0.1"$TABL"' + list[i].serverName + '_local"$NLINE';
             }
-            str += '$MARK$NLINE"' + "\n";
+            str += '$MARKE$NLINE"' + "\n";
             str += 'echo "$p" > /etc/hosts' + "\n";
             fs.writeFile(fnHosts, str, (err) => {
                 callback(err);
@@ -230,14 +232,23 @@
                 me.removeBootupFile(fnDocker, callback);
             });
         }
+
         this.vHostRec = (rec) => {
             var str = '';
-            str += '<VirtualHost *:' + rec.port + '>' + "\n";
-            str += 'ServerName ' + rec.serverName +  "\n";
+            str += '<VirtualHost *:80>' + "\n";
+            str += 'ServerName ' + rec.serverName +  ".local\n";
             str += 'ProxyRequests On' + "\n";
             str += 'ProxyPreserveHost Off' + "\n";
-            str += 'ProxyPass / http://' + rec.ip + ':' + rec.innerPort + '/' + "\n";
-            str += 'ProxyPassReverse http://' + rec.ip + ':' + rec.innerPort + '/' + "\n";
+            str += 'ProxyPass / http://' + rec.ip + ':' + rec.port + '/' + "\n";
+            str += 'ProxyPassReverse / http://' + rec.ip + ':' + rec.port + '/' + "\n";
+            str += '</VirtualHost>' + "\n\n";
+
+            str += '<VirtualHost *:80>' + "\n";
+            str += 'ServerName ' + rec.serverName +  "_local\n";
+            str += 'ProxyRequests On' + "\n";
+            str += 'ProxyPreserveHost Off' + "\n";
+            str += 'ProxyPass / http://' + rec.ip + ':' + rec.port + '/' + "\n";
+            str += 'ProxyPassReverse / http://' + rec.ip + ':' + rec.port + '/' + "\n";
             str += '</VirtualHost>' + "\n\n";
             return str;
         }

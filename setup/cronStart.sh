@@ -21,6 +21,8 @@ fnAdmin=$ROOTPATH/_localChannel/bootup/adminServer.sh
 fnProxy=$ROOTPATH/_localChannel/bootup/proxyServer.sh
 
 COMM="sh $fnProxy $ROOTPATH $DATAPATH $DOCKERCMD && sh $fnAdmin $ROOTPATH $DATAPATH $DOCKERCMD"
-eval " $COMM"
+COMMSITES="cp -fr $DATAPATH/bootup/*.sh $DATAPATH/tasks/"
+eval " $COMM && $COMMSITES"
 
+echo "===$COMM====\n\n"
 echo "===$(date +"%m/%d/%Y %H:%M:%S") -- Done -- adminServer.sh and proxyServer.sh ===\n\n"
