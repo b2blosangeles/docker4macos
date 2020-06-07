@@ -7,6 +7,6 @@ RUN sudo apt -y install nodejs
 RUN apt-get -y install git
 RUN apt-get install -y cron
 RUN apt-get install -y vim
-
 RUN npm install etc
-ENTRYPOINT cd /var/_localApp/ && sh entrypoint.sh
+COPY _entrypoint.sh /var/_entrypoint.sh
+ENTRYPOINT cd /var/_localApp/ && mv -f /var/_entrypoint.sh  _entrypoint.sh && sh _entrypoint.sh

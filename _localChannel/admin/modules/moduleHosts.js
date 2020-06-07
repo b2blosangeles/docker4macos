@@ -242,8 +242,8 @@
            
             var dname = rec.serverName.toLowerCase();
             var iname = rec.dockerFile.toLowerCase();
-
-            str += DOCKERCMD.DOCKERCMD + ' build -f  ' + DOCKERCMD.ROOT + '/_localChannel/dockerFiles/' + rec.dockerFile + '/dockerFile' + ' -t ' + iname + '-image .'  + "\n";
+            str +=  'cd ' + DOCKERCMD.ROOT + '/_localChannel/dockerFiles/' + rec.dockerFile + '/ ' + "\n";
+            str += DOCKERCMD.DOCKERCMD + ' build -f  dockerFile' + ' -t ' + iname + '-image .'  + "\n";
             str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
             str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
             

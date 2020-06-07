@@ -66,7 +66,7 @@
 		this.loadDockersList = () => {
 			  delete require.cache[env.root+ '/modules/moduleDockerfile.js'];
 			  var MDockerfile= require(env.root+ '/modules/moduleDockerfile.js');
-			  var dockers = new MDockerfile(env);
+			  var dockers = new MDockerfile(env, pkg);
 			  dockers.loadDockersList(function(list) {
 				res.send({status:'success', list : list });
 			  });
