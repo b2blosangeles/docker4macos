@@ -16,7 +16,7 @@ while true; do
 
        fn=/tmp/$(basename $f)_$(date +%s%N).data
        echo "-- Start process $f -- at $(date +"%m/%d/%Y %H:%M:%S")" >> /var/_cronData/dataCron.log
-       cmdd="mv $f $fn && sh /var/_localApp/dataScript.sh $fn && rm -fr $fn && rm -fr $markfile "
+       cmdd="mv $f $fn && sh /var/_localApp/entrypoint.sh $fn && rm -fr $fn && rm -fr $markfile "
        eval "$cmdd"  >> /var/_cronData/dataCron.log
        echo "-- Done $f -- at $(date +"%m/%d/%Y %H:%M:%S")" >> /var/_cronData/dataCron.log
      fi
