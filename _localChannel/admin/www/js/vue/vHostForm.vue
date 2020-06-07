@@ -60,7 +60,7 @@
                         <div class="dropdown-menu dropdown-pick-docker shadow border-secondary rounded-0 border-width-1" >
                             <div v-for="(v, k) in $parent.commonData.dockers" class="dropdown-item" v-bind:class="{ 'bg-even': !(k%2), 'bg-odd': (k%2) }">
                                 <a href="JavaScript:void(0)" v-on:click="selectDocker(v.code)"><b>{{v.code}}</a></a>
-                                <p class="text-wrap p-0 m-1" v-for="item in v.description">{{item}}</p>
+                                <p class="text-wrap p-0 m-1" v-html="v.description"></p>
                             </div>
                         </div>
                     </div>

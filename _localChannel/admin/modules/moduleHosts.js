@@ -6,9 +6,6 @@
         var fn = env.dataFolder + '/setting/hosts.json';
         var fnHosts = env.dataFolder + '/tasks/refreshEtcHosts.sh';
         var fnRefreshProxy = env.dataFolder + '/tasks/fnRefreshProxy.sh';
-//        var fnDocker = env.dataFolder + '/setting/addDocker.sh';
-//        var fnRemoveDocker = env.dataFolder + '/setting/removeDocker.sh';
-
 
         var CP = new pkg.crowdProcess();
 
@@ -227,11 +224,11 @@
                DOCKERCMD = require(env.dataFolder  + '/DOCKERCMD.json');
             } catch (e) {};
            
-            str += DOCKERCMD.DOCKERCMD + ' restart local_proxy_container ';
+            str += 'sleep 2 && ' + DOCKERCMD.DOCKERCMD + ' restart local_proxy_container ';
             str += "\n";
 
             fs.writeFile(fnRefreshProxy, str, (err) => {
-               callback(true)
+                callback(true);               
             });
         }
 
@@ -246,7 +243,7 @@
             var dname = rec.serverName.toLowerCase();
             var iname = rec.dockerFile.toLowerCase();
 
-            str += DOCKERCMD.DOCKERCMD + ' build -f  ' + DOCKERCMD.ROOT + '/_localChannel/admin/dockers/' + rec.dockerFile + ' -t ' + iname + '-image .'  + "\n";
+            str += DOCKERCMD.DOCKERCMD + ' build -f  ' + DOCKERCMD.ROOT + '/_localChannel/dockerFiles/' + rec.dockerFile + '/dockerFile' + ' -t ' + iname + '-image .'  + "\n";
             str += DOCKERCMD.DOCKERCMD + ' container stop site_channel_container-'  + dname + "\n";
             str += DOCKERCMD.DOCKERCMD + ' container rm site_channel_container-' + dname  + "\n";
             
@@ -257,7 +254,7 @@
             }
             
             str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str;
-            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/sites/' + dname + '":/var/_localChannel ';
+            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/sites/' + dname + '":/var/_localApp ';
             str += ' -v  "'+ DOCKERCMD.DATAPATH + '/cronData/' + dname + '":/var/_cronData ';
             str += '--name site_channel_container-' + dname + '  ' + iname + '-image';
             str += "\n";
