@@ -44,11 +44,16 @@
                 me.saveSitesHosts(data, cbk);
             };
 
+
             _f['EtcHosts'] = function(cbk) {
                 me.saveEtcHosts(cbk);
             };
             _f['VHosts'] = function(cbk) {
                 me.createVhostConfig(cbk);
+            };
+
+            _f['addSiteClonDataFolder'] = function(cbk) {
+                me.addSiteClonDataFolder(data, cbk);
             };
 
             _f['addDocker'] = function(cbk) {
@@ -90,6 +95,10 @@
 
             _f['removeDocker'] = function(cbk) {
                 me.removeDocker(serverName, cbk);
+            };
+
+            _f['removeSiteClonDataFolder'] = function(cbk) {
+                me.removeSiteClonDataFolder(serverName, cbk);
             };
 
             _f['refreshProxy'] = function(cbk) {
@@ -189,6 +198,27 @@
             });
         }
 
+        this.addSiteClonDataFolder = (rec, cbk) => {
+            var me = this;
+            var dname = rec.serverName.toLowerCase();
+            var cmd = 'mkdir -p ' + env.dataFolder + '/cronData/' + dname + '/upload'; 
+            cmd += ' && ' + 'mkdir -p ' + env.dataFolder + '/cronData/' + dname + '/inBound';
+            cmd += ' && ' + 'mkdir -p ' + env.dataFolder + '/cronData/' + dname + '/outBound';
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    cbk(true);
+            });
+        }
+
+        this.removeSiteClonDataFolder = (fname, cbk) => {
+            var me = this;
+            var cmd = 'rm -fr ' + env.dataFolder + '/cronData/' + fname; 
+            exec(cmd, {maxBuffer: 1024 * 2048},
+                function(error, stdout, stderr) {
+                    cbk(true);
+            });
+        }
+
         this.refreshProxy = (callback) => {
             var me = this;
             var str='', err = {}, DOCKERCMD = {};
@@ -226,9 +256,10 @@
                 p_str += ' -p ' + (parseInt(rec.unidx + '0000') + parseInt(p[i])) + ':' + parseInt(p[i]) + ' ';
             }
             
-            str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str + ' -v ';
-            str += '"'+ DOCKERCMD.DATAPATH + '/sites/' + dname;
-            str += '":/var/_localChannel --name site_channel_container-' + dname + '  ' + iname + '-image';
+            str += DOCKERCMD.DOCKERCMD + ' run -d --network=network_ui_app ' + p_str;
+            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/sites/' + dname + '":/var/_localChannel ';
+            str += ' -v  "'+ DOCKERCMD.DATAPATH + '/cronData/' + dname + '":/var/_cronData ';
+            str += '--name site_channel_container-' + dname + '  ' + iname + '-image';
             str += "\n";
 
             var fnDocker = env.dataFolder + '/bootup/addDocker_' + dname +'.sh';
