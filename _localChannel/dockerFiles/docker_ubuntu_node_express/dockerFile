@@ -12,4 +12,5 @@ RUN npm install ect
 RUN npm install express
 RUN npm install body-parser
 
-ENTRYPOINT cd /var/_localApp/ && sh entrypoint.sh
+COPY _entrypoint.sh /var/_entrypoint.sh
+ENTRYPOINT cd /var/_localApp/ && mv -f /var/_entrypoint.sh  _entrypoint.sh && sh _entrypoint.sh
