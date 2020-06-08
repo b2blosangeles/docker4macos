@@ -1,2 +1,2 @@
-system ubuntu:19.10
-Node 13.3 git cron vim express etc body-parser installed 
+system ubuntu:19.10 Node 14.x git vim express etc body-parser installed 
+it is good for contents server
